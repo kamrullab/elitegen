@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>ELITE CC GEN — Fast BIN-based Card Generator (No Ads)</title>
+    <meta name="description" content="ELITE CC GEN is a fast, ad‑free BIN‑based card generator with dark UI, mobile‑first design, copy in one click, and multiple output formats (PIPE/CSV/JSON/XML/SQL)." data-qmeta="description">
+    <meta name="keywords" content="ELITE CC GEN, BIN generator, card generator, cc gen, csv json sql pipe, dark theme, no ads, fast generator" data-qmeta="keywords">
+    <meta property="og:title" content="ELITE CC GEN — Fast BIN-based Card Generator" data-qmeta="ogTitle">
+    <meta property="og:description" content="Ad‑free, mobile‑first generator with multiple formats and smart date options." data-qmeta="ogDesc">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="./">
+    <meta property="og:image" content="favicon.png">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="ELITE CC GEN — Fast BIN-based Card Generator" data-qmeta="twitterTitle">
+    <meta name="twitter:description" content="Ad‑free, mobile‑first generator with multiple formats and smart date options.">
+    <meta name="author" content="Kamrul">
+    <link rel="canonical" href="./">
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1">
+    <meta property="og:site_name" content="ELITE CC GEN">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:image:width" content="512">
+    <meta property="og:image:height" content="512">
+    <meta name="msapplication-TileColor" content="#0f172a">
+    <link rel="apple-touch-icon" href="favicon.png">
+    
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "ELITE CC GEN",
+      "url": "./",
+      "inLanguage": "en",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "./?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "ELITE CC GEN",
+      "url": "./",
+      "logo": "favicon.png",
+      "sameAs": [
+        "https://kamrul.com.bd",
+        "https://facebook.com/elitekamruls",
+        "https://t.me/elite_supportbd"
+      ]
+    }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800;900&family=Pacifico&display=swap">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="ELITE CC GEN">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#000">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+<style type="text/css">
+.navigation {
+  display: flex;
+  background-color: #2c3e50;
+  align-items: center;
+  justify-content: center;
+  height: 100px;
+  margin-bottom: 30px;
+}
+.logo img {
+  max-width: 200px;
+}
+</style>
+<style type="text/css">
+.footer {
+  margin-top: 50px;
+}
+.mx {
+  margin: 0 10px;
+}
+</style>
+</head>
+<body>
+<div id="app">
+    <nav class="navigations" style="justify-content:center;">
+        <div class="site-header">
+            <a href="#"><img src="favicon.png" alt="Logo" class="header-logo"></a>
+            <a href="./" class="brand-link" aria-label="ELITE CC GEN" style="text-decoration:none;">
+                <span class="rainbow">
+                    <span>E</span><span>L</span><span>I</span><span>T</span><span>E</span> <span>C</span><span>C</span> <span>G</span><span>E</span><span>N</span>
+                </span>
+            </a>
+        </div>
+    </nav>
+    <div class="container">
+        <div id="toast-notification" class="toast-notification"></div>
+        <br>
+        <div class="panel-container">
+            <datalist id="binHistory"></datalist>
+            <div class="left-panel">
+                <div class="px-4 py-5 sm:p-6">
+                    <form class="space-y-6">
+                        <div class="grid sm:grid-cols-2 gap-x-3 gap-y-6">
+                            <div>
+                                <div class="relative">
+                                    <label for="bin" class="absolute -top-2 left-2 inline-block bg-gray-800 px-1 text-xs font-semibold tracking-wider text-gray-300">
+                                        <i class="fa-solid fa-credit-card"></i> BIN
+                                    </label>
+                                    <input name="bin" id="bin" list="binHistory" placeholder="e.g: 453590" class="ring-1 ring-gray-500 dark:bg-gray-900/90 block w-full rounded-md border-0 py-2 text-gray-200 font-medium shadow-sm ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-teal-600 sm:text-sm sm:leading-6" type="text">
+                                </div>
+                            </div>
+
+                            <div>
+                                <div class="relative">
+                                    <label for="format" class="absolute -top-2 left-2 inline-block bg-gray-800 px-1 text-xs font-semibold tracking-wider text-gray-300">
+                                        <i class="fa-solid fa-sliders"></i> FORMAT
+                                    </label>
+                                    <select name="format" id="format" class="ring-1 ring-gray-500 dark:bg-gray-900/90 block w-full rounded-md border-0 py-2 text-gray-400 font-medium shadow-sm ring-inset focus:ring-2 focus:ring-inset focus:ring-teal-600 sm:text-sm sm:leading-6">
+                                        <option value="pipe">PIPE</option>
+                                        <option value="csv">CSV</option>
+                                        <option value="sql">SQL</option>
+                                        <option value="json">JSON</option>
+                                        <option value="xml">XML</option>
+                                    </select>
+                    </div>
+                    </div>
+                </div>
+
+                        <div class="grid grid-cols-2 sm:grid-cols-5 gap-x-3 gap-y-6">
+                            <div class="flex items-center gap-x-2 sm:col-span-1">
+                                <button class="relative inline-flex h-4 w-8 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-teal-300/80 focus:ring-offset-2 bg-teal-700" type="button" role="switch" aria-checked="true">
+                                    <span class="sr-only"></span>
+                                    <span class="pointer-events-none relative inline-block h-3 w-3 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out translate-x-4">
+                                        <span class="absolute inset-0 flex h-full w-full items-center justify-center transition-opacity opacity-100 duration-200 ease-in">
+                                            <svg class="h-2 w-2 text-teal-600" fill="currentColor" viewBox="0 0 12 12">
+                                                <path d="M3.707 5.293a1 1 0 00-1.414 1.414l1.414-1.414zM5 8l-.707.707a1 1 0 001.414 0L5 8zm4.707-3.293a1 1 0 00-1.414-1.414l1.414 1.414zm-7.414 2l2 2 1.414-1.414-2-2-1.414 1.414zm3.414 2l4-4-1.414-1.414-4 4 1.414 1.414z"></path>
+                                            </svg>
+                                        </span>
+                                    </span>
+                                </button>
+                                <span class="text-xs text-teal-300 font-medium uppercase"><i class="fa-solid fa-calendar"></i> date</span>
+                    </div>
+
+                            <div class="relative col-span-2">
+                                <div class="relative">
+                                    <label for="month" class="absolute -top-2 left-2 inline-block bg-gray-800 px-1 text-xs font-semibold tracking-wider text-gray-300">
+                                        <i class="fa-solid fa-calendar-days"></i> EXPIRATION MONTH
+                                    </label>
+                                    <select name="month" id="month" class="ring-1 ring-gray-500 dark:bg-gray-900/90 block w-full rounded-md border-0 py-2 text-gray-400 font-medium shadow-sm ring-inset focus:ring-2 focus:ring-inset focus:ring-teal-600 sm:text-sm sm:leading-6">
+                                <option value="">Random</option>
+                                        <option value="1">January</option>
+                                        <option value="2">February</option>
+                                        <option value="3">March</option>
+                                        <option value="4">April</option>
+                                        <option value="5">May</option>
+                                        <option value="6">June</option>
+                                        <option value="7">July</option>
+                                        <option value="8">August</option>
+                                        <option value="9">September</option>
+                                        <option value="10">October</option>
+                                        <option value="11">November</option>
+                                        <option value="12">December</option>
+                            </select>
+                    </div>
+                </div>
+
+                            <div class="relative col-span-2">
+                                <div class="relative">
+                                    <label for="year" class="absolute -top-2 left-2 inline-block bg-gray-800 px-1 text-xs font-semibold tracking-wider text-gray-300">
+                                        <i class="fa-solid fa-calendar-check"></i> EXPIRATION YEAR
+                                    </label>
+                                    <select name="year" id="year" class="ring-1 ring-gray-500 dark:bg-gray-900/90 block w-full rounded-md border-0 py-2 text-gray-400 font-medium shadow-sm ring-inset focus:ring-2 focus:ring-inset focus:ring-teal-600 sm:text-sm sm:leading-6">
+                                    <option value="">Random</option>
+                                        <option value="2025">2025</option>
+                                        <option value="2026">2026</option>
+                                        <option value="2027">2027</option>
+                                        <option value="2028">2028</option>
+                                        <option value="2029">2029</option>
+                                        <option value="2030">2030</option>
+                                        <option value="2031">2031</option>
+                                        <option value="2032">2032</option>
+                                        <option value="2033">2033</option>
+                                </select>
+                    </div>
+                </div>
+            </div>
+
+                        <div class="grid grid-cols-2 sm:grid-cols-5 gap-x-3 gap-y-6">
+                            <div class="flex items-center gap-x-2 sm:col-span-1">
+                                <button class="relative inline-flex h-4 w-8 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-teal-300/80 focus:ring-offset-2 bg-teal-700" type="button" role="switch" aria-checked="true">
+                                    <span class="sr-only"></span>
+                                    <span class="pointer-events-none relative inline-block h-3 w-3 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out translate-x-4">
+                                        <span class="absolute inset-0 flex h-full w-full items-center justify-center transition-opacity opacity-100 duration-200 ease-in">
+                                            <svg class="h-2 w-2 text-teal-600" fill="currentColor" viewBox="0 0 12 12">
+                                                <path d="M3.707 5.293a1 1 0 00-1.414 1.414l1.414-1.414zM5 8l-.707.707a1 1 0 001.414 0L5 8zm4.707-3.293a1 1 0 00-1.414-1.414l1.414 1.414zm-7.414 2l2 2 1.414-1.414-2-2-1.414 1.414zm3.414 2l4-4-1.414-1.414-4 4 1.414 1.414z"></path>
+                                            </svg>
+                                        </span>
+                                    </span>
+                                </button>
+                                <span class="text-xs text-teal-300 font-medium uppercase"><i class="fa-solid fa-lock"></i> cvv</span>
+                            </div>
+
+                            <div class="relative col-span-2">
+                                <div class="relative">
+                                    <label for="cvc" class="absolute -top-2 left-2 inline-block bg-gray-800 px-1 text-xs font-semibold tracking-wider text-gray-300">
+                                        <i class="fa-solid fa-key"></i> CVV
+                                    </label>
+                                    <input name="cvc" id="cvc" placeholder="Leave blank to randomize" class="ring-1 ring-gray-500 dark:bg-gray-900/90 block w-full rounded-md border-0 py-2 text-gray-200 font-medium shadow-sm ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-teal-600 sm:text-sm sm:leading-6" type="text">
+        </div>
+                    </div>
+
+                            <div class="relative col-span-2">
+                                <div class="relative">
+                                    <label for="quantity" class="absolute -top-2 left-2 inline-block bg-gray-800 px-1 text-xs font-semibold tracking-wider text-gray-300">
+                                        <i class="fa-solid fa-list-ol"></i> QUANTITY
+                                    </label>
+                                    <select id="quantity" name="quantity" class="ring-1 ring-gray-500 dark:bg-gray-900/90 block w-full rounded-md border-0 py-2 text-gray-400 font-medium shadow-sm ring-inset focus:ring-2 focus:ring-inset focus:ring-teal-600 sm:text-sm sm:leading-6">
+                                        <option value="10" selected>10</option>
+                                        <option value="50">50</option>
+                                        <option value="100">100</option>
+                                        <option value="500">500</option>
+                                        <option value="1000">1,000</option>
+                                        <option value="2000">2,000</option>
+                                        <option value="5000">5,000</option>
+                                        <option value="7000">7,000</option>
+                                        <option value="8000">8,000</option>
+                                        <option value="10000">10,000</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                        <div class="grid grid-cols-2 sm:grid-cols-5 gap-x-3 gap-y-6">
+                            <div class="flex items-center gap-x-2 sm:col-span-1">
+                                <button class="relative inline-flex h-4 w-8 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-teal-300/80 focus:ring-offset-2 bg-gray-700" type="button" role="switch" aria-checked="false">
+                                    <span class="sr-only"></span>
+                                    <span class="pointer-events-none relative inline-block h-3 w-3 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out translate-x-0">
+                                        <span class="absolute inset-0 flex h-full w-full items-center justify-center transition-opacity opacity-100 duration-200 ease-in">
+                                            <svg class="h-2 w-2 text-gray-400" fill="none" viewBox="0 0 12 12">
+                                                <path d="M4 8l2-2m0 0l2-2M6 6L4 4m2 2l2 2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                            </svg>
+                                        </span>
+                                    </span>
+                                </button>
+                                <span class="text-xs text-teal-300 font-medium uppercase"><i class="fa-solid fa-money-bill-wave"></i> money</span>
+                            </div>
+
+                            <div class="relative col-span-2">
+                                <div class="relative">
+                                    <label for="currency" class="absolute -top-2 left-2 inline-block bg-gray-800 px-1 text-xs font-semibold tracking-wider text-gray-300">
+                                        <i class="fa-solid fa-coins"></i> CURRENCY
+                                    </label>
+                                    <select name="currency" id="currency" class="ring-1 ring-gray-500 dark:bg-gray-900/90 block w-full rounded-md border-0 py-2 text-gray-400 font-medium shadow-sm ring-inset focus:ring-2 focus:ring-inset focus:ring-teal-600 sm:text-sm sm:leading-6">
+                                        <option value="">Select currency</option>
+                                        <option value="USD">United States Dollar</option>
+                                        <option value="PHP">Philippine Peso</option>
+                                        <option value="EUR">Euro</option>
+                                        <option value="JPY">Japanese Yen</option>
+                                        <option value="GBP">British Pound Sterling</option>
+                                        <option value="CHF">Swiss Franc</option>
+                                        <option value="CAD">Canadian Dollar</option>
+                                        <option value="AUD">Australian Dollar</option>
+                                        <option value="CNY">Chinese Yuan Renminbi</option>
+                                        <option value="INR">Indian Rupee</option>
+                                        <option value="BRL">Brazilian Real</option>
+                                        <option value="ZAR">South African Rand</option>
+                                        <option value="RUB">Russian Ruble</option>
+                                        <option value="SAR">Saudi Riyal</option>
+                                        <option value="SGD">Singapore Dollar</option>
+                                        <option value="MXN">Mexican Peso</option>
+                                    </select>
+                            </div>
+                        </div>
+
+                            <div class="relative col-span-2">
+                                <div class="relative">
+                                    <label for="balance" class="absolute -top-2 left-2 inline-block bg-gray-800 px-1 text-xs font-semibold tracking-wider text-gray-300">
+                                        <i class="fa-solid fa-wallet"></i> BALANCE
+                                    </label>
+                                    <select name="balance" id="balance" class="ring-1 ring-gray-500 dark:bg-gray-900/90 block w-full rounded-md border-0 py-2 text-gray-400 font-medium shadow-sm ring-inset focus:ring-2 focus:ring-inset focus:ring-teal-600 sm:text-sm sm:leading-6">
+                                        <option value="500-1000">500-1000</option>
+                                        <option value="1000-2000">1000-2000</option>
+                                        <option value="2000-3000">2000-3000</option>
+                                        <option value="3000-4000">3000-4000</option>
+                                        <option value="4000-5000">4000-5000</option>
+                                    </select>
+                                </div>
+                        </div>
+                    </div>
+
+                        <div>
+                            <button type="button" id="generateBtn" class="inline-flex items-center gap-x-1.5 rounded-md bg-teal-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-teal-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-600">
+                                <i class="fa-solid fa-bolt"></i>
+                                <span>Generate</span>
+                            </button>
+                    </div>
+                </form>
+                </div>
+            </div>
+            <div class="right-panel">
+                <div class="result-container">
+                    <textarea id="result" cols="30" rows="11" class="form-control result" placeholder=""></textarea>
+                    <div id="messageOverlay" class="message-overlay" style="display:none;"></div>
+            </div>
+                <div class="button-container">
+                    <button type="button" id="copyBtn" class="btn btn-secondary">Copy</button>
+                    <button type="button" id="resetBtn" class="btn btn-secondary">Reset</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+  <footer class="site-footer">
+        <div class="footer-top">
+            <div class="container">
+                <div class="footer-grid">
+                    <div class="footer-brand">
+                        <div class="brand-row">
+                            <img src="favicon.png" alt="Logo" class="footer-logo">
+                            <div class="brand-title">
+                                <span class="rainbow" aria-label="ELITE CC GEN">
+                                    <span>E</span><span>L</span><span>I</span><span>T</span><span>E</span> <span>C</span><span>C</span> <span>G</span><span>E</span><span>N</span>
+                                </span>
+                            </div>
+                        </div>
+                        <p class="brand-desc">ELITE CC GEN — <strong style="color:#ef4444">Fast • Secure • Ad‑free</strong><br><em>No logs. No tracking. Test data only.</em></p>
+
+                        
+                    </div>
+                    <div class="footer-links">
+                        <h4><i class="fas fa-link"></i> Quick Links</h4>
+                            <ul class="footer-quicklinks">
+                                <li><a href="about.html"><i class="fa-solid fa-circle-info"></i> About</a></li>
+                                <li><a href="contact.html"><i class="fa-solid fa-address-card"></i> Contact</a></li>
+                                <li><a href="https://eduid.pages.dev/" target="_blank" rel="noopener"><i class="fa-solid fa-id-card"></i> Student card gen</a></li>
+                            </ul>
+                    </div>
+                    <!-- Author Card moved here instead of Contact -->
+                    <div class="footer-contact">
+                        <div class="flex flex-col md:flex-row items-center md:items-start space-y-4 md:space-y-0 md:space-x-6">
+                            <!-- Author Photo -->
+                            <div class="relative">
+                                <div class="w-20 h-20 rounded-full overflow-hidden border-3 border-yellow-400 shadow-lg">
+                                    <img src="https://eduid.pages.dev/assets/photos/01.jpg" alt="Kamrul Hossain - Author" class="w-full h-full object-cover">
+                                </div>
+                                <!-- Online Status -->
+                                <div class="absolute -bottom-1 -right-1 w-6 h-6 bg-green-500 border-2 border-gray-800 rounded-full flex items-center justify-center">
+                                    <i class="fa-solid fa-check text-white text-xs"></i>
+                                </div>
+                            </div>
+                            
+                            <!-- Author Info -->
+                            <div class="text-center md:text-left">
+                                <h4 class="text-lg font-bold text-blue-400 hover:text-blue-300 transition-colors duration-300 mb-2" style="font-family: 'Dancing Script', cursive; letter-spacing: 1px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); display: inline-flex; align-items: center; gap: 8px;">
+                                    <i class="fa-solid fa-user-shield"></i>
+                                    <span>Author: Kamrul</span>
+                                </h4>
+                                <p class="text-gray-300 text-sm mb-2">Ethical Hacker • Server &amp; System Admin</p>
+                                <div class="text-gray-400 text-xs sm:text-sm leading-relaxed">
+                                    <div class="flex flex-col sm:flex-row items-center sm:items-start space-y-1 sm:space-y-0 sm:space-x-2 mb-2">
+                                        <span class="text-gray-400 text-xs sm:text-sm">Sponsored by</span>
+                                        <a href="https://procloudify.com/bd/recommended/kamrul/?via=kamrul" target="_blank" rel="noopener noreferrer" class="sponsor-link" style="display:inline-flex;align-items:center;">
+                                            <img src="https://procloudify.com.bd/assets/images/procloudify-Logo.avif" alt="ProCloudify" class="h-5 w-auto sm:h-6 md:h-7 sponsor-logo">
+                                        </a>
+                                    </div>
+                                    <div class="text-center sm:text-left space-y-1">
+                                        <p class="author-tagline text-xs sm:text-sm italic">Fast. Secure. Perfect Hosting.</p>
+                                        <p class="author-subtag text-xs sm:text-sm font-medium">Premium Cloud Solutions</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="container footer-bottom-row">
+                <span>© <span id="yearNow"></span> <strong>ELITE KAMRUL</strong></span>
+                <span class="built-with"><i class="fas fa-bolt"></i> Built for speed • <i class="fas fa-shield-alt"></i> No tracking</span>
+            </div>
+        </div>
+    </footer>
+    <div id="hiddenElement" style="display: none;">
+        source code: https://github.com/avipatilpro/CC_Gen?tab=readme-ov-file , https://avipatilpro.github.io/CC_Gen/
+    </div>
+</div>
+<script src="script.js"></script>
+ <script>document.getElementById('yearNow').textContent = new Date().getFullYear();</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
