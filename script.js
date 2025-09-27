@@ -288,6 +288,29 @@ document.addEventListener('DOMContentLoaded', () => {
                         console.log('Date fields disabled');
                     }
                 }
+            } else if (index === 1) { // Second toggle is for money
+                const currencyField = document.getElementById('currency');
+                const balanceField = document.getElementById('balance');
+                
+                if (currencyField && balanceField) {
+                    if (newState) {
+                        // Enable fields
+                        currencyField.disabled = false;
+                        balanceField.disabled = false;
+                        currencyField.style.opacity = '1';
+                        balanceField.style.opacity = '1';
+                        console.log('Money fields enabled');
+                    } else {
+                        // Disable fields
+                        currencyField.disabled = true;
+                        balanceField.disabled = true;
+                        currencyField.style.opacity = '0.5';
+                        balanceField.style.opacity = '0.5';
+                        currencyField.value = '';
+                        balanceField.value = '500-1000'; // Reset to default
+                        console.log('Money fields disabled');
+                    }
+                }
             }
         });
     });
@@ -322,6 +345,38 @@ document.addEventListener('DOMContentLoaded', () => {
             yearField.style.opacity = enabled ? '1' : '0.5';
         }
         console.log('Date toggle initialized:', enabled ? 'enabled' : 'disabled');
+    }
+
+    // Apply initial state for money toggle on load
+    function applyInitialMoneyToggleState() {
+        const moneyToggle = toggleSwitches[1];
+        if (!moneyToggle) return;
+        const enabled = moneyToggle.getAttribute('aria-checked') === 'true';
+        const thumb = moneyToggle.querySelector('span[class*="translate-x"]');
+        // Ensure visual state matches aria state
+        if (thumb) {
+            if (enabled) {
+                thumb.classList.remove('translate-x-0');
+                thumb.classList.add('translate-x-4');
+                moneyToggle.classList.remove('bg-gray-700');
+                moneyToggle.classList.add('bg-teal-700');
+            } else {
+                thumb.classList.remove('translate-x-4');
+                thumb.classList.add('translate-x-0');
+                moneyToggle.classList.remove('bg-teal-700');
+                moneyToggle.classList.add('bg-gray-700');
+            }
+        }
+        // Enable/disable fields accordingly
+        const currencyField = document.getElementById('currency');
+        const balanceField = document.getElementById('balance');
+        if (currencyField && balanceField) {
+            currencyField.disabled = !enabled;
+            balanceField.disabled = !enabled;
+            currencyField.style.opacity = enabled ? '1' : '0.5';
+            balanceField.style.opacity = enabled ? '1' : '0.5';
+        }
+        console.log('Money toggle initialized:', enabled ? 'enabled' : 'disabled');
     }
 
     // Event listener for the "Generate Cards" button
@@ -481,20 +536,51 @@ document.addEventListener('DOMContentLoaded', () => {
                     return '';
                 };
 
+                // Check if money toggle is ON
+                const moneyToggle = toggleSwitches[1];
+                const moneyToggleEnabled = moneyToggle && moneyToggle.getAttribute('aria-checked') === 'true';
+                
+                // Only include money values if toggle is ON AND values are actually selected
+                const currencyValue = moneyToggleEnabled && currency && currency.trim() !== '' ? currency : '';
+                const balanceValue = moneyToggleEnabled && balance && balance.trim() !== '' ? balance : '';
+                
+                console.log('Money toggle state:', {
+                    toggleEnabled: moneyToggleEnabled,
+                    currency: currencyValue,
+                    balance: balanceValue
+                });
+
                 // Output formatter by format
                 const formatCards = (cardsArr, fmt) => {
                     const f = (fmt || 'pipe').toLowerCase();
+                    const hasMoneyData = currencyValue && balanceValue; // Only include if both values exist
+                    
                     switch (f) {
                         case 'csv':
+                            if (hasMoneyData) {
+                                return cardsArr.map(c => `${c.number},${getExpiry(c)},${c.cvv},${currencyValue},${balanceValue}`).join('\n');
+                            }
                             return cardsArr.map(c => `${c.number},${getExpiry(c)},${c.cvv}`).join('\n');
                         case 'sql':
+                            if (hasMoneyData) {
+                                return cardsArr.map(c => `INSERT INTO cards(number, month, year, cvv, currency, balance) VALUES ('${c.number}','${(getExpiry(c).split('/')[0]||'').padStart(2,'0')}','${(getExpiry(c).split('/')[1]||'')}','${c.cvv}','${currencyValue}','${balanceValue}');`).join('\n');
+                            }
                             return cardsArr.map(c => `INSERT INTO cards(number, month, year, cvv) VALUES ('${c.number}','${(getExpiry(c).split('/')[0]||'').padStart(2,'0')}','${(getExpiry(c).split('/')[1]||'')}','${c.cvv}');`).join('\n');
                         case 'json':
+                            if (hasMoneyData) {
+                                return JSON.stringify(cardsArr.map(c => ({ number: c.number, month: (getExpiry(c).split('/')[0]||''), year: (getExpiry(c).split('/')[1]||''), cvv: c.cvv, currency: currencyValue, balance: balanceValue })), null, 2);
+                            }
                             return JSON.stringify(cardsArr.map(c => ({ number: c.number, month: (getExpiry(c).split('/')[0]||''), year: (getExpiry(c).split('/')[1]||''), cvv: c.cvv })), null, 2);
                         case 'xml':
+                            if (hasMoneyData) {
+                                return cardsArr.map(c => `<card><number>${c.number}</number><month>${(getExpiry(c).split('/')[0]||'')}</month><year>${(getExpiry(c).split('/')[1]||'')}</year><cvv>${c.cvv}</cvv><currency>${currencyValue}</currency><balance>${balanceValue}</balance></card>`).join('\n');
+                            }
                             return cardsArr.map(c => `<card><number>${c.number}</number><month>${(getExpiry(c).split('/')[0]||'')}</month><year>${(getExpiry(c).split('/')[1]||'')}</year><cvv>${c.cvv}</cvv></card>`).join('\n');
                         case 'pipe':
                         default:
+                            if (hasMoneyData) {
+                                return cardsArr.map(c => `${c.number}|${getExpiry(c)}|${c.cvv}|${currencyValue}|${balanceValue}`).join('\n');
+                            }
                             return cardsArr.map(c => `${c.number}|${getExpiry(c)}|${c.cvv}`).join('\n');
                     }
                 };
@@ -709,6 +795,7 @@ document.addEventListener('DOMContentLoaded', () => {
     populateMonths();
     // Re-apply toggle-driven state after options exist
     applyInitialDateToggleState();
+    applyInitialMoneyToggleState();
 
     // Legacy checkbox logic removed; toggle switches drive state now
 
