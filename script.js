@@ -264,8 +264,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
             
-            // Control month and year fields based on toggle state
-            if (index === 0) { // First toggle is for date
+            // Control fields based on toggle state
+            if (index === 0) { // First toggle is for DATE
                 const monthField = document.getElementById('month');
                 const yearField = document.getElementById('year');
                 
@@ -288,7 +288,24 @@ document.addEventListener('DOMContentLoaded', () => {
                         console.log('Date fields disabled');
                     }
                 }
-            } else if (index === 1) { // Second toggle is for money
+            } else if (index === 1) { // Second toggle is for CVC
+                const cvcField = document.getElementById('cvc');
+                
+                if (cvcField) {
+                    if (newState) {
+                        // Enable field
+                        cvcField.disabled = false;
+                        cvcField.style.opacity = '1';
+                        console.log('CVC field enabled');
+                    } else {
+                        // Disable field
+                        cvcField.disabled = true;
+                        cvcField.style.opacity = '0.5';
+                        cvcField.value = '';
+                        console.log('CVC field disabled');
+                    }
+                }
+            } else if (index === 2) { // Third toggle is for MONEY
                 const currencyField = document.getElementById('currency');
                 const balanceField = document.getElementById('balance');
                 
@@ -347,9 +364,38 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log('Date toggle initialized:', enabled ? 'enabled' : 'disabled');
     }
 
-    // Apply initial state for money toggle on load
+    // Apply initial state for CVC toggle on load (index 1)
+    function applyInitialCvcToggleState() {
+        const cvcToggle = toggleSwitches[1];
+        if (!cvcToggle) return;
+        const enabled = cvcToggle.getAttribute('aria-checked') === 'true';
+        const thumb = cvcToggle.querySelector('span[class*="translate-x"]');
+        // Ensure visual state matches aria state
+        if (thumb) {
+            if (enabled) {
+                thumb.classList.remove('translate-x-0');
+                thumb.classList.add('translate-x-4');
+                cvcToggle.classList.remove('bg-gray-700');
+                cvcToggle.classList.add('bg-teal-700');
+            } else {
+                thumb.classList.remove('translate-x-4');
+                thumb.classList.add('translate-x-0');
+                cvcToggle.classList.remove('bg-teal-700');
+                cvcToggle.classList.add('bg-gray-700');
+            }
+        }
+        // Enable/disable field accordingly
+        const cvcField = document.getElementById('cvc');
+        if (cvcField) {
+            cvcField.disabled = !enabled;
+            cvcField.style.opacity = enabled ? '1' : '0.5';
+        }
+        console.log('CVC toggle initialized:', enabled ? 'enabled' : 'disabled');
+    }
+
+    // Apply initial state for money toggle on load (index 2)
     function applyInitialMoneyToggleState() {
-        const moneyToggle = toggleSwitches[1];
+        const moneyToggle = toggleSwitches[2];
         if (!moneyToggle) return;
         const enabled = moneyToggle.getAttribute('aria-checked') === 'true';
         const thumb = moneyToggle.querySelector('span[class*="translate-x"]');
@@ -536,8 +582,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     return '';
                 };
 
-                // Check if money toggle is ON
-                const moneyToggle = toggleSwitches[1];
+                // Check if money toggle is ON (index 2)
+                const moneyToggle = toggleSwitches[2];
                 const moneyToggleEnabled = moneyToggle && moneyToggle.getAttribute('aria-checked') === 'true';
                 
                 // Only include money values if toggle is ON AND values are actually selected
@@ -795,6 +841,7 @@ document.addEventListener('DOMContentLoaded', () => {
     populateMonths();
     // Re-apply toggle-driven state after options exist
     applyInitialDateToggleState();
+    applyInitialCvcToggleState();
     applyInitialMoneyToggleState();
 
     // Legacy checkbox logic removed; toggle switches drive state now
