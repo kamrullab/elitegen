@@ -19,6 +19,8 @@
 - **🎯 Smart BIN Detection** — Auto-detects card type and CVC length
 - **📝 Auto-Formatting** — BIN input with visual card number formatting
 - **⚡ Real-time Validation** — Instant feedback and error handling
+- **ℹ️ BIN Information Box** — Compact, responsive box showing brand, type, level, issuer, country, currency with copy button
+- **🛡️ API Obfuscation** — Client-side Base64 obfuscation of endpoints (Network tab will still show requests)
 
 ## 🎯 Quick Start
 
@@ -28,6 +30,7 @@
 2. **Choose Options** — Select quantity, format, and date preferences
 3. **Generate** — Click generate to create test data with correct CVC length
 4. **Copy** — One-click copy to clipboard
+5. **View BIN Info** — After generating, a small BIN info box appears with details and Copy Info
 
 ## 📋 Supported Formats
 
@@ -74,6 +77,7 @@
 - **Desktop**: Two-panel layout with side-by-side generation and results
 - **Tablet**: Stacked layout with optimized spacing
 - **Mobile**: Single-column layout with touch-friendly controls
+- BIN info box is ultra-compact with tuned spacing across breakpoints (1024/768/640/480/360)
 
 ## 🔧 Configuration
 
@@ -88,12 +92,34 @@ No external configuration required for basic usage. Open `index.html` in a brows
 - **CVC Detection**: Auto-detects CVC length based on BIN patterns
 - **Card Type Recognition**: Identifies American Express, Visa, Mastercard, etc.
 - **Real-time Formatting**: Visual card number formatting as you type
+- **Money Toggle Logic**: Currency/balance only included if toggle ON and values selected
+- **Date Toggle Default**: Date toggle ON by default with Random month/year fallback
+## 🔌 BIN Information APIs
+
+- **Primary (BD-first)**: Tries `Kiron` BIN API first; if country is BANGLADESH, uses that data
+- **Fallback**: Falls back to Vercel BIN API for non-BD and as backup
+- **Unified Display**: Data normalized to show BIN, Brand, Type, Level, Country, Country Code, Currency, Issuer
+- **Copy**: One-click copy of all BIN info values
+
+Note: Upstream URLs are lightly obfuscated in client using Base64. This hides them in source view, but browser Network tab will still show request URLs. Use a server-side proxy to fully hide upstream endpoints.
+
+### API Obfuscation (Client)
+- Endpoints are encoded with Base64 and decoded at runtime (e.g., via `atob`)
+- Prevents casual scraping of raw URLs from source
+- Does not provide security; use server-side for secrets and rate limits
+
+### Error Handling & Timeouts
+- 10s request timeout with graceful cancel
+- Friendly messages for 400/5xx/network/CORS/local-file scenarios
+- Local-file guidance when run without a server
+
 
 ## 📄 Pages
 
 - **Home** (`index.html`) — Main generator interface
 - **About** (`about.html`) — Project information, team, terms
 - **Contact** (`contact.html`) — Contact information and support
+ - Dedicated SEO metadata across pages; favicon fixes included
 
 ## 🎨 Customization
 
@@ -129,6 +155,7 @@ No external configuration required for basic usage. Open `index.html` in a brows
 - **Memory Usage**: Minimal (no heavy frameworks)
 - **BIN Processing**: Real-time detection and formatting
 - **CVC Generation**: Client-side with proper length validation
+- **PIPE View**: Colored visual view with raw text preserved for quick copy
 
 ## 🔒 Privacy & Security
 

@@ -45,8 +45,9 @@ document.addEventListener('DOMContentLoaded', () => {
         balanceInput: !!elements.balanceInput
     });
 
-    // API configuration
-    const API_BASE_URL = 'https://cc-gen-lime.vercel.app/generate';
+    // API configuration (light obfuscation)
+    const __d64 = (s) => (typeof atob === 'function' ? atob(s) : s);
+    const API_BASE_URL = __d64('aHR0cHM6Ly9jYy1nZW4tbGltZS52ZXJjZWwuYXBwL2dlbmVyYXRl');
     const DEFAULT_QUANTITY = 10;
     const MAX_QUANTITY = 50;
     const BIN_STORAGE_KEY = 'elite_cc_gen_last_bin';
@@ -425,6 +426,159 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log('Money toggle initialized:', enabled ? 'enabled' : 'disabled');
     }
 
+    // BIN Information functionality
+    async function fetchBinInfo(bin) {
+        try {
+            console.log(`Fetching BIN info for: ${bin}`);
+            
+            // Try Kiron API first for any BIN (it will return data if it's a Bangladeshi BIN)
+            console.log('Trying Kiron API first for BIN:', bin);
+            try {
+                const kironResponse = await fetch(__d64('aHR0cHM6Ly9hcGkuY2Mua2lyb24uZGV2L2FwaS9iaW4/YmluPQ==') + bin);
+                
+                if (kironResponse.ok) {
+                    const kironData = await kironResponse.json();
+                    console.log('Kiron API response:', kironData);
+                    
+                    // Check if Kiron API returned Bangladeshi data
+                    if (kironData.success && kironData.data && kironData.data.country?.name === 'BANGLADESH') {
+                        console.log('Kiron API returned Bangladeshi BIN data');
+                        const data = kironData.data;
+                        return {
+                            bin: data.bin,
+                            scheme: data.cardBrand,
+                            type: data.cardType,
+                            tier: data.cardLevel,
+                            country: data.country?.name || 'Unknown',
+                            country_code: 'BD',
+                            flag: '🇧🇩', // Bangladesh flag
+                            currency: 'BDT', // Bangladeshi Taka
+                            bank: data.issuerName
+                        };
+                    }
+                }
+            } catch (kironError) {
+                // console.log('Kiron API failed or no Bangladeshi data:', kironError.message);
+            }
+            
+            // Use Vercel API as fallback
+            console.log('Using Vercel API as fallback');
+            const vercelResponse = await fetch(__d64('aHR0cHM6Ly9jYy1nZW4tbGltZS52ZXJjZWwuYXBwL2Jpbi8=') + bin);
+            
+            if (!vercelResponse.ok) {
+                throw new Error(`Vercel API error! Status: ${vercelResponse.status}`);
+            }
+            
+            const binData = await vercelResponse.json();
+            console.log('Vercel API response:', binData);
+            return binData;
+        } catch (error) {
+            console.error('Error fetching BIN info:', error);
+            return null;
+        }
+    }
+
+    function displayBinInfo(binData) {
+        const container = document.getElementById('binInfoContainer');
+        const content = document.getElementById('binInfoContent');
+        const lastUpdated = document.getElementById('lastUpdated');
+        
+        if (!binData || !container || !content) return;
+        
+        // Format the data for display with icons - comprehensive BIN info
+        const infoItems = [
+            { label: 'BIN', value: binData.bin || 'UNKNOWN', icon: 'fa-solid fa-hashtag' },
+            { label: 'Brand', value: binData.scheme || 'UNKNOWN', icon: 'fa-solid fa-credit-card' },
+            { label: 'Type', value: binData.type || 'UNKNOWN', icon: 'fa-solid fa-tag' },
+            { label: 'Level', value: binData.tier || 'UNKNOWN', icon: 'fa-solid fa-layer-group' },
+            { label: 'Country', value: binData.country || 'Unknown', flag: binData.flag, icon: 'fa-solid fa-globe' },
+            { label: 'Country Code', value: binData.country_code || 'UNKNOWN', icon: 'fa-solid fa-flag' },
+            { label: 'Currency', value: binData.currency || 'UNKNOWN', icon: 'fa-solid fa-dollar-sign' },
+            { label: 'Issuer', value: binData.bank || 'UNKNOWN BANK', icon: 'fa-solid fa-building-columns' }
+        ];
+        
+        // Create HTML content with icons
+        content.innerHTML = infoItems.map(item => `
+            <div class="bin-info-item">
+                <span class="bin-info-label">
+                    <i class="${item.icon}"></i>
+                    ${item.label}:
+                </span>
+                <span class="bin-info-value">
+                    ${item.flag ? `<span class="bin-info-flag">${item.flag}</span>` : ''}
+                    ${item.value}
+                </span>
+            </div>
+        `).join('');
+        
+        // Update timestamp
+        const now = new Date();
+        lastUpdated.textContent = `Last updated: ${now.toLocaleString()}`;
+        
+        // Show the container
+        container.style.display = 'flex';
+        
+        console.log('BIN info displayed successfully');
+    }
+
+    function hideBinInfo() {
+        const container = document.getElementById('binInfoContainer');
+        if (container) {
+            container.style.display = 'none';
+        }
+    }
+
+    // Copy BIN info functionality
+    document.getElementById('copyBinInfo')?.addEventListener('click', async () => {
+        const content = document.getElementById('binInfoContent');
+        if (!content) return;
+        
+        const infoText = Array.from(content.querySelectorAll('.bin-info-item'))
+            .map(item => {
+                const labelElement = item.querySelector('.bin-info-label');
+                const valueElement = item.querySelector('.bin-info-value');
+                
+                // Remove icon text and get clean label
+                const label = labelElement.textContent.replace(/[^\w\s]/g, '').trim();
+                const value = valueElement.textContent.trim();
+                return `${label}: ${value}`;
+            })
+            .join('\n');
+        
+        try {
+            await navigator.clipboard.writeText(infoText);
+            
+            // Visual feedback on button
+            const button = document.getElementById('copyBinInfo');
+            const originalText = button.innerHTML;
+            button.innerHTML = '<i class="fa-solid fa-check"></i> Copied!';
+            button.style.background = 'linear-gradient(135deg, #059669 0%, #047857 100%)';
+            
+            // Reset button after 2 seconds
+            setTimeout(() => {
+                button.innerHTML = originalText;
+                button.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+            }, 2000);
+            
+            console.log('BIN info copied successfully:', infoText);
+        } catch (error) {
+            console.error('Failed to copy BIN info:', error);
+            
+            // Fallback for older browsers
+            const textArea = document.createElement('textarea');
+            textArea.value = infoText;
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                showNotification('BIN information copied to clipboard!', 'success');
+            } catch (fallbackError) {
+                showNotification('Failed to copy BIN information', 'error');
+            }
+            document.body.removeChild(textArea);
+        }
+    });
+
     // Event listener for the "Generate Cards" button
     if (elements.generateButton) {
         console.log('Generate button initialized');
@@ -445,7 +599,21 @@ document.addEventListener('DOMContentLoaded', () => {
             // Basic BIN validation before hitting API
             if (!bin || bin.length < 6) {
                 elements.resultTextarea.value = 'Please enter a valid BIN (at least 6 digits).';
+                hideBinInfo(); // Hide BIN info if BIN is invalid
                 return;
+            }
+
+            // Fetch and display BIN information
+            try {
+                const binData = await fetchBinInfo(bin);
+                if (binData) {
+                    displayBinInfo(binData);
+                } else {
+                    hideBinInfo();
+                }
+            } catch (error) {
+                console.error('Error fetching BIN info:', error);
+                hideBinInfo();
             }
 
             // Persist valid BIN for next visits
@@ -988,6 +1156,9 @@ function resetForm() {
     document.getElementById('currency').value = '';
     document.getElementById('balance').value = '500-1000';
     document.getElementById('result').value = '';
+    
+    // Hide BIN information box
+    hideBinInfo();
     
     console.log('Form reset completed');
     showCopyNotification("Form reset successfully");
